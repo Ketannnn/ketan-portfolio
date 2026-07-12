@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Rounded square background matching the site's base color -->
+  <rect width="32" height="32" rx="7" fill="#09090b"/>
+
+  <!-- Subtle border so the favicon reads on dark browser chrome -->
+  <rect width="32" height="32" rx="7" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+
+  <!-- "K" letterform -->
+  <path
+    d="M7 8h2.5v6.5l5-6.5H17l-5.5 7L17 24h-2.6l-4.4-6.5V24H7V8z"
+    fill="white"
+  />
+
+  <!-- "D" letterform -->
+  <path
+    d="M18 8h3.5c2.8 0 4.5 2 4.5 8s-1.7 8-4.5 8H18V8zm2.5 13.5c1.5 0 2.5-1.3 2.5-5.5s-1-5.5-2.5-5.5H20.5v11H20.5z"
+    fill="white"
+  />
+
+  <!-- Accent dot — matches the KD. logo in the navbar -->
+  <circle cx="28.5" cy="25" r="2.5" fill="#818cf8"/>
+</svg>
