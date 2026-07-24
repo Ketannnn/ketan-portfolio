@@ -118,7 +118,7 @@ export function Contact() {
                     href={link.href}
                     target={link.external ? "_blank" : undefined}
                     rel={link.external ? "noopener noreferrer" : undefined}
-                    aria-label={`${link.label}: ${link.description}`}
+                   aria-label={`${link.label}: ${link.description}${link.external ? ' (opens in new tab)' : ''}`}
                     className="flex items-center justify-between p-4 sm:p-5 group"
                   >
                     <div>

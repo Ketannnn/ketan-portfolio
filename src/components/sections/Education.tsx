@@ -41,8 +41,8 @@ export function Education() {
               <motion.div key={item.id} variants={staggerItem}>
                 <GlassCard className="p-6 sm:p-7">
                   <div className="flex items-start gap-5">
-                    {/* GraduationCap icon — single accent usage, justified here */}
-                    <div className="shrink-0 p-3 rounded-xl bg-accent-muted border border-accent/20 mt-0.5">
+                    {/* GraduationCap — decorative; section already has aria-label "Education" */}
+                    <div aria-hidden="true" className="shrink-0 p-3 rounded-xl bg-accent-muted border border-accent/20 mt-0.5">
                       <GraduationCap size={20} className="text-accent" />
                     </div>
 
@@ -72,11 +72,11 @@ export function Education() {
                       {/* Meta row: dates, location, CGPA */}
                       <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted">
                         <span className="flex items-center gap-1.5">
-                          <Calendar size={11} className="shrink-0" />
+                          <Calendar size={11} className="shrink-0" aria-hidden="true" />
                           {item.years}
                         </span>
                         <span className="flex items-center gap-1.5">
-                          <MapPin size={11} className="shrink-0" />
+                          <MapPin size={11} className="shrink-0" aria-hidden="true" />
                           {item.location}
                         </span>
                         {item.cgpa && (

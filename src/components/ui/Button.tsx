@@ -54,11 +54,11 @@ export function Button({
   const content = (
     <>
       {icon && iconPosition === "left" && (
-        <span className="shrink-0">{icon}</span>
+        <span className="shrink-0" aria-hidden="true">{icon}</span>
       )}
       {children}
       {icon && iconPosition === "right" && (
-        <span className="shrink-0">{icon}</span>
+        <span className="shrink-0" aria-hidden="true">{icon}</span>
       )}
     </>
   );

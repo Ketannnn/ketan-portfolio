@@ -1,4 +1,4 @@
-export type MockType = "api-console" | "ai-fitness";
+export type MockType = "ai-fitness";
 
 export interface Project {
   id: string;
@@ -9,7 +9,10 @@ export interface Project {
   stack: string[];
   liveUrl?: string;
   githubUrl: string;
-  mockType: MockType;
+  /** Rendered as an interactive mock when screenshotUrl is absent */
+  mockType?: MockType;
+  /** If set, a real screenshot is shown instead of the mock component */
+  screenshotUrl?: string;
 }
 
 export const projects: Project[] = [
@@ -17,29 +20,32 @@ export const projects: Project[] = [
     id: "api-support-console",
     title: "API Support Console",
     subtitle:
-      "A Flask-based console to automate testing and debugging of API endpoints.",
+      "A full-stack REST API testing tool — send GET and POST requests from the browser, inspect formatted responses, measure latency, and keep a persistent SQLite history.",
     features: [
-      "Engineered a Flask-based console to automate testing and debugging of various API endpoints.",
-      "Implemented robust GET/POST request handling and performed in-depth HTTP response analysis.",
-      "Tracked and logged critical API issues, streamlining the debugging process.",
+      "Built a browser-based REST API tester supporting GET and POST requests with real-time formatted JSON responses and inline error messages.",
+      "Persisted the full request history in SQLite — users can review past calls and clear history on demand without losing session context.",
+      "Measured and displayed API response time per request; handles network errors, timeouts, and invalid JSON responses gracefully.",
     ],
-    stack: ["Python", "Flask", "SQLite", "HTML", "CSS"],
-    githubUrl: "https://github.com/Ketannnn",
-    mockType: "api-console",
+    stack: ["Python", "Flask", "SQLite", "JavaScript", "HTML", "CSS", "Requests", "Render"],
+    liveUrl: "https://api-support-console.onrender.com/",
+    githubUrl: "https://github.com/Ketannnn/api-support-console",
+    // Real screenshot replaces the mock UI for this project
+    screenshotUrl: "/images/api-support-console.webp",
   },
   {
     id: "ai-fitness-trainer",
-    title: "AI-Based Fitness Trainer",
+    title: "AI-Powered Fitness Assistant",
     subtitle:
-      "An AI-powered system for personalized fitness guidance using Computer Vision and LLMs.",
+      "Collaborative final-year project — AI platform combining computer vision and LLMs for personalised workout plans, real-time pose detection, and diet recommendations.",
     status: "In Progress",
     features: [
-      "Designed an AI-powered system for personalized fitness guidance, leveraging Computer Vision and LLMs.",
-      "Integrated pose estimation techniques (MediaPipe/OpenPose) to monitor body posture and analyze joint angles in real-time.",
-      "Developed real-time voice feedback mechanisms for immediate exercise correction and guidance.",
+      "Built the React + TypeScript frontend: authentication flow, responsive dashboard, and integration with FastAPI backend services.",
+      "Real-time pose detection using MediaPipe/TensorFlow with exercise rep counting and voice-enabled AI assistant feedback.",
+      "Personalised workout and diet recommendations driven by LLM — progress tracked per user across sessions.",
     ],
-    stack: ["Python", "MediaPipe/OpenPose", "Computer Vision", "LLM APIs"],
-    githubUrl: "https://github.com/Ketannnn",
-    mockType: "ai-fitness",
+    stack: ["React", "TypeScript", "Tailwind CSS", "Python", "FastAPI", "MediaPipe", "TensorFlow", "OpenCV", "SQLite", "LLM"],
+    // No public deployment — Live Demo button intentionally omitted
+    githubUrl: "https://github.com/yashchaugule05/fit-ai",
+    screenshotUrl: "/images/ai-fitness-trainer.webp",
   },
 ];

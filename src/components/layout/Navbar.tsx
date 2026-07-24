@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X, FileDown } from "lucide-react";
 import { motion, LayoutGroup } from "framer-motion";
 import { useActiveSection } from "../../hooks/useActiveSection";
@@ -22,6 +22,9 @@ const SECTION_IDS = NAV_LINKS.map((l) => l.href.replace("#", ""));
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled,   setScrolled]   = useState(false);
+  // Used to set `inert` on the mobile menu when closed, removing all its
+  // children from the keyboard tab order without affecting CSS transitions.
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const activeId = useActiveSection(SECTION_IDS);
 
   // Trigger background blur once scrolled past hero fold
@@ -37,6 +40,16 @@ export function Navbar() {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  // Sync inert attribute: when closed, the menu is removed from tab order.
+  // This prevents keyboard users from accidentally focusing hidden links.
+  // Uses a ref + imperative DOM update to avoid TypeScript type conflicts
+  // (React 18 doesn't include `inert` in HTMLAttributes types).
+  useEffect(() => {
+    if (mobileMenuRef.current) {
+      mobileMenuRef.current.inert = !mobileOpen;
+    }
+  }, [mobileOpen]);
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -132,10 +145,12 @@ export function Navbar() {
       </nav>
 
       {/* ── Mobile nav panel ── */}
+      {/* role="dialog" removed: this is a disclosure/expandable panel, not a modal.
+       *  aria-controls + aria-expanded on the trigger button is the correct ARIA
+       *  pattern. The inert attribute (managed via ref above) handles tab order. */}
       <div
+        ref={mobileMenuRef}
         id="mobile-menu"
-        role="dialog"
-        aria-label="Navigation menu"
         aria-hidden={!mobileOpen}
         className={`md:hidden transition-all duration-300 overflow-hidden
           ${mobileOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}

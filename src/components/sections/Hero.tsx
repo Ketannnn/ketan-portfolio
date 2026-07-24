@@ -209,10 +209,13 @@ export function Hero() {
                     href={link.href}
                     target={link.external ? "_blank" : undefined}
                     rel={link.external ? "noopener noreferrer" : undefined}
-                    aria-label={link.label}
+                    aria-label={link.external ? `${link.label} (opens in new tab)` : link.label}
                     className="px-3 py-1.5 rounded-lg text-xs font-mono text-muted hover:text-white hover:bg-white/5 transition-all duration-200 flex items-center gap-1.5"
                   >
-                    <ExternalLink size={11} className="shrink-0 opacity-60" />
+                    {link.external
+                      ? <ExternalLink size={11} className="shrink-0 opacity-60" />
+                      : <Mail size={11} className="shrink-0 opacity-60" />
+                    }
                     {link.label}
                   </a>
                   {i < SOCIAL_LINKS.length - 1 && (

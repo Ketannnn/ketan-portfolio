@@ -4,13 +4,36 @@ import { SectionHeader } from "../ui/SectionHeader";
 import { GlassCard } from "../ui/GlassCard";
 import { SkillBadge } from "../ui/SkillBadge";
 import { Button } from "../ui/Button";
-import { ApiConsoleMock } from "../mocks/ApiConsoleMock";
 import { AiFitnessMock } from "../mocks/AiFitnessMock";
-import { projects } from "../../data/projects";
+import { projects, type Project } from "../../data/projects";
 import { useScrollReveal, fadeUp, staggerContainer, staggerItem } from "../../hooks/useScrollReveal";
 
-function ProjectMock({ type }: { type: "api-console" | "ai-fitness" }) {
-  if (type === "api-console") return <ApiConsoleMock />;
+/**
+ * Renders the right-column visual for a project card.
+ * - If the project has a real screenshot, shows it as a responsive image
+ *   with lazy loading and a subtle hover zoom (triggered by the parent card's
+ *   `group` class).
+ * - Falls back to the AiFitnessMock interactive component otherwise.
+ */
+function ProjectVisual({ project }: { project: Project }) {
+  if (project.screenshotUrl) {
+    return (
+      // overflow-hidden clips the scale transform; bg-[#090d17] matches the
+      // screenshot's dark background to prevent white flash during lazy load.
+      <div className="overflow-hidden rounded-xl border border-white/10 bg-[#090d17]">
+        <img
+          src={project.screenshotUrl}
+          alt={`${project.title} — application screenshot`}
+          width={1024}
+          height={615}
+          className="w-full h-auto block transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    );
+  }
+  // Fallback: interactive mock for projects without a screenshot yet
   return <AiFitnessMock />;
 }
 
@@ -44,6 +67,7 @@ export function Projects() {
               href="https://github.com/Ketannnn"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Explore all GitHub repositories (opens in new tab)"
               className="text-xs text-accent hover:text-white flex items-center gap-1 transition-colors duration-200 font-mono"
             >
               Explore all repositories
@@ -57,7 +81,7 @@ export function Projects() {
               <motion.div key={project.id} variants={staggerItem}>
                 <GlassCard
                   as="article"
-                  className="p-6 sm:p-8 grid lg:grid-cols-2 gap-8 items-start"
+                  className="p-6 sm:p-8 grid lg:grid-cols-2 gap-8 items-start group"
                 >
                   {/* Left — info */}
                   <div className="flex flex-col gap-5">
@@ -85,7 +109,7 @@ export function Projects() {
                           key={i}
                           className="flex gap-3 text-xs text-zinc-400 leading-relaxed"
                         >
-                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-accent shrink-0" />
+                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-zinc-600 shrink-0" />
                           {feat}
                         </li>
                       ))}
@@ -108,6 +132,7 @@ export function Projects() {
                           target="_blank"
                           icon={<ExternalLink size={12} />}
                           iconPosition="right"
+                          aria-label={`View ${project.title} live demo (opens in new tab)`}
                         >
                           Live Demo
                         </Button>
@@ -119,15 +144,16 @@ export function Projects() {
                         target="_blank"
                         icon={<ArrowUpRight size={12} />}
                         iconPosition="right"
+                        aria-label={`View ${project.title} on GitHub (opens in new tab)`}
                       >
                         GitHub
                       </Button>
                     </div>
                   </div>
 
-                  {/* Right — mock UI */}
+                  {/* Right — screenshot or mock UI */}
                   <div className="w-full">
-                    <ProjectMock type={project.mockType} />
+                    <ProjectVisual project={project} />
                   </div>
                 </GlassCard>
               </motion.div>

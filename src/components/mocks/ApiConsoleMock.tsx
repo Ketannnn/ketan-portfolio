@@ -7,68 +7,66 @@ interface Endpoint {
   status: number;
 }
 
+// GET and POST only — matches the real app's supported methods.
+// URLs reflect the kinds of public APIs a user would actually test.
 const ENDPOINTS: Endpoint[] = [
   {
     method: "GET",
-    path: "/api/users",
+    path: "https://api.github.com/users/Ketannnn",
     status: 200,
     response: {
-      status: "ok",
-      count: 3,
-      data: [
-        { id: 1, name: "Ketan Devraj", role: "admin" },
-        { id: 2, name: "Jane Smith", role: "user" },
-      ],
+      login: "Ketannnn",
+      public_repos: 12,
+      followers: 4,
+      location: "Pune, India",
     },
   },
   {
     method: "POST",
-    path: "/api/auth",
+    path: "https://httpbin.org/post",
     status: 200,
     response: {
       status: "ok",
-      token: "eyJhbGciOiJIUzI1NiJ9.payload.signature",
-      expires_in: 3600,
+      json: { key: "value", test: true },
+      origin: "103.x.x.x",
     },
   },
   {
     method: "GET",
-    path: "/api/orders",
+    path: "https://jsonplaceholder.typicode.com/todos/1",
     status: 200,
     response: {
-      status: "ok",
-      orders: [
-        { id: "ORD-001", amount: 149.99, state: "shipped" },
-        { id: "ORD-002", amount: 89.0, state: "pending" },
-      ],
+      userId: 1,
+      id: 1,
+      title: "delectus aut autem",
+      completed: false,
     },
   },
   {
-    method: "DELETE",
-    path: "/api/session",
-    status: 204,
-    response: { status: "ok", message: "Session terminated." },
+    method: "POST",
+    path: "https://httpbin.org/status/201",
+    status: 201,
+    response: { status: "created", message: "Resource created successfully." },
   },
   {
-    method: "PUT",
-    path: "/api/profile",
+    method: "GET",
+    path: "https://api.coindesk.com/v1/bpi/currentprice.json",
     status: 200,
     response: {
-      status: "ok",
-      updated: { name: "Ketan Devraj", location: "Pune, India" },
+      time: { updated: "Jul 24, 2025 13:00:00 UTC" },
+      bpi: { USD: { rate: "67,420.50" } },
     },
   },
 ];
 
 const METHOD_COLORS: Record<string, string> = {
-  GET: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
+  GET:  "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
   POST: "text-blue-400 bg-blue-400/10 border-blue-400/20",
-  PUT: "text-yellow-400 bg-yellow-400/10 border-yellow-400/20",
-  DELETE: "text-red-400 bg-red-400/10 border-red-400/20",
 };
 
 const STATUS_COLORS: Record<number, string> = {
   200: "text-emerald-400",
+  201: "text-emerald-400",
   204: "text-emerald-400",
   401: "text-red-400",
   500: "text-red-400",
@@ -116,7 +114,7 @@ export function ApiConsoleMock() {
         {/* Endpoint list */}
         <div className="w-40 border-r border-white/8 flex flex-col overflow-y-auto py-2 shrink-0">
           <p className="px-3 py-1.5 text-[10px] tracking-widest uppercase text-zinc-600">
-            Endpoints
+            History
           </p>
           {ENDPOINTS.map((ep) => {
             const isActive = selected.path === ep.path;
@@ -150,9 +148,13 @@ export function ApiConsoleMock() {
             </span>
             <span className="text-zinc-400 flex-1 truncate">{selected.path}</span>
             {!loading && (
-              <span className={`font-bold text-[10px] ${STATUS_COLORS[displayed.status] ?? "text-zinc-400"}`}>
-                {displayed.status} OK
-              </span>
+              <>
+                <span className={`font-bold text-[10px] ${STATUS_COLORS[displayed.status] ?? "text-zinc-400"}`}>
+                  {displayed.status} OK
+                </span>
+                {/* Response time — one of the real app's core features */}
+                <span className="text-zinc-600 text-[10px] ml-auto">142ms</span>
+              </>
             )}
           </div>
 

@@ -45,20 +45,19 @@ export function About() {
               />
             </motion.div>
 
-            <motion.div
-              variants={staggerContainer}
-              className="space-y-5 text-zinc-400 leading-[1.8]"
-            >
+            {/* Bio — plain div, no animation.
+             * motion.div variants={fadeUp} was unreliable here because this element
+             * is inside a non-motion <div> parent inside the outer staggerContainer.
+             * Framer Motion's variant propagation through non-motion elements doesn't
+             * reliably fire the visible state. The SectionHeader's entrance animation
+             * above is sufficient — body text should always be immediately readable. */}
+            <div className="space-y-5 text-zinc-400 leading-[1.8]">
               {aboutBio.map((paragraph, i) => (
-                <motion.p
-                  key={i}
-                  variants={staggerItem}
-                  className="text-base sm:text-lg"
-                >
+                <p key={i} className="text-base sm:text-lg">
                   {paragraph}
-                </motion.p>
+                </p>
               ))}
-            </motion.div>
+            </div>
           </div>
 
           {/* ── RIGHT: Highlight cards ── */}

@@ -7,7 +7,6 @@ import {
   useScrollReveal,
   fadeUp,
   staggerContainer,
-  staggerItem,
   slideInLeft,
 } from "../../hooks/useScrollReveal";
 
@@ -70,12 +69,11 @@ export function Experience() {
                     variants={slideInLeft}
                     className="flex gap-5 items-start"
                   >
-                    {/* ── Icon dot ──
-                     * Most recent role: accent-filled ring (stands out).
-                     * Earlier role: subtle zinc ring (recedes).
-                     * Both are positioned z-10 so they render above the line.
-                     */}
+                    {/* Icon dot — purely decorative; the card's h3 + text already
+                     * communicate the role. Hiding this prevents screen readers from
+                     * announcing an empty or unlabelled SVG. */}
                     <div
+                      aria-hidden="true"
                       className={`shrink-0 h-9 w-9 rounded-full flex items-center justify-center relative z-10
                         ${isLatest
                           ? "bg-accent-muted border border-accent/40"
@@ -108,7 +106,7 @@ export function Experience() {
                             {item.period}
                           </span>
                           <span className="flex items-center gap-1 text-[11px] text-subtle">
-                            <MapPin size={10} />
+                            <MapPin size={10} aria-hidden="true" />
                             {item.location}
                           </span>
                         </div>

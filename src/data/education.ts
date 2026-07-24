@@ -17,7 +17,7 @@ export const education: EducationItem[] = [
     shortName: "DYPIEMR, Akurdi",
     degree: "Bachelor of Engineering (B.E.)",
     field: "Computer Engineering",
-    cgpa: "7.06",
+    cgpa: "7.36",
     years: "2022 – 2026",
     location: "Akurdi, Pune",
   },

@@ -67,9 +67,9 @@ export function Skills() {
                       {Icon && (
                         <Icon size={13} className="text-zinc-500 shrink-0" />
                       )}
-                      <p className="text-[11px] font-semibold tracking-widest uppercase text-muted font-mono">
+                      <h3 className="text-[11px] font-semibold tracking-widest uppercase text-muted font-mono">
                         {category.label}
-                      </p>
+                      </h3>
                     </div>
 
                     {/* Skill badges.
