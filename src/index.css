@@ -14,7 +14,6 @@
   }
 
   html {
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -23,8 +22,22 @@
     background-color: #09090b;
     color: #fafafa;
     font-family: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: "cv11";
     min-height: 100vh;
     line-height: 1.6;
+    cursor: none;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.015;
+    pointer-events: none;
+    z-index: 9999;
   }
 
   /* Focus visible — keyboard accessibility */

@@ -8,10 +8,18 @@ import { Projects } from "./components/sections/Projects";
 import { Education } from "./components/sections/Education";
 import { Contact } from "./components/sections/Contact";
 import { SectionDivider } from "./components/ui/SectionDivider";
+import { CursorProvider } from "./context/CursorContext";
+import { CustomCursor } from "./components/ui/CustomCursor";
+import { useLenis } from "./hooks/useLenis";
+import { MotionConfig, AnimatePresence } from "framer-motion";
 
 function App() {
+  useLenis();
+
   return (
-    <div className="min-h-screen bg-base text-white">
+    <CursorProvider>
+      <CustomCursor />
+      <div className="min-h-screen bg-base text-white">
       {/*
        * Skip-to-content link — WCAG 2.4.1 (Bypass Blocks, Level A).
        * Visually hidden until keyboard-focused; appears as an indigo pill
@@ -27,7 +35,9 @@ function App() {
       </a>
 
       <Navbar />
-      <main id="main-content" role="main">
+      <MotionConfig reducedMotion="user">
+        <AnimatePresence mode="wait">
+          <main id="main-content" role="main">
         <Hero />
         <SectionDivider />
         <About />
@@ -41,9 +51,12 @@ function App() {
         <Education />
         <SectionDivider />
         <Contact />
-      </main>
+          </main>
+        </AnimatePresence>
+      </MotionConfig>
       <Footer />
     </div>
+    </CursorProvider>
   );
 }
 

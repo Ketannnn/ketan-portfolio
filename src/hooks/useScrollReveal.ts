@@ -1,4 +1,5 @@
 import { useInView } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { useRef } from "react";
 
 export interface ScrollRevealOptions {
@@ -27,14 +28,14 @@ export function useScrollReveal(options: ScrollRevealOptions = {}) {
   const isInView = useInView(ref, {
     amount: threshold,
     once,
-    margin,
+    margin: margin as any,
   });
 
   return { ref, isInView };
 }
 
 /** Standard fade-up variants for Framer Motion */
-export const fadeUp = {
+export const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
@@ -44,7 +45,7 @@ export const fadeUp = {
 };
 
 /** Stagger container — use on a wrapping element when children stagger in */
-export const staggerContainer = {
+export const staggerContainer: Variants = {
   hidden: {},
   visible: {
     transition: {
@@ -55,7 +56,7 @@ export const staggerContainer = {
 };
 
 /** Fade-up variant for staggered children */
-export const staggerItem = {
+export const staggerItem: Variants = {
   hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
@@ -69,7 +70,7 @@ export const staggerItem = {
  * The horizontal slide reinforces the left-to-right reading direction
  * of the timeline visual, making the reveal feel directional and intentional.
  */
-export const slideInLeft = {
+export const slideInLeft: Variants = {
   hidden: { opacity: 0, x: -20 },
   visible: {
     opacity: 1,
@@ -84,7 +85,7 @@ export const slideInLeft = {
  * compared to the universal fadeUp used in most other sections.
  * The scale is imperceptible at rest but noticeable during the reveal.
  */
-export const scaleUp = {
+export const scaleUp: Variants = {
   hidden: { opacity: 0, scale: 0.96 },
   visible: {
     opacity: 1,

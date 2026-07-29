@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Menu, X, FileDown } from "lucide-react";
 import { motion, LayoutGroup } from "framer-motion";
 import { useActiveSection } from "../../hooks/useActiveSection";
+import { useMagnetic } from "../../hooks/useMagnetic";
+import { useCursor } from "../../context/CursorContext";
 import { siteConfig } from "../../config/site";
 import { Button } from "../ui/Button";
 
@@ -26,6 +28,8 @@ export function Navbar() {
   // children from the keyboard tab order without affecting CSS transitions.
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const activeId = useActiveSection(SECTION_IDS);
+  const { setCursorState } = useCursor();
+  const { ref: logoRef, x: logoX, y: logoY } = useMagnetic(0.3);
 
   // Trigger background blur once scrolled past hero fold
   useEffect(() => {
@@ -68,14 +72,18 @@ export function Navbar() {
         className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between"
       >
         {/* Logo — clicking returns to top */}
-        <a
+        <motion.a
+          ref={logoRef as React.RefObject<HTMLAnchorElement>}
+          style={{ x: logoX, y: logoY }}
           href="#home"
+          onMouseEnter={() => setCursorState("hover")}
+          onMouseLeave={() => setCursorState("default")}
           aria-label={`${siteConfig.name} — back to top`}
-          className="text-white font-bold text-lg tracking-tight transition-opacity duration-200 hover:opacity-70"
+          className="text-white font-bold text-lg tracking-tight transition-opacity duration-200 hover:opacity-70 inline-block origin-center"
         >
           {siteConfig.initials}
           <span className="text-accent">.</span>
-        </a>
+        </motion.a>
 
         {/* ── Desktop nav pill with sliding active indicator ── */}
         {/*
@@ -85,23 +93,36 @@ export function Navbar() {
          * The sliding background replaces the old instant bg-swap.
          */}
         <LayoutGroup>
-          <ul
+          <motion.ul
             role="list"
             className="hidden md:flex items-center gap-0.5 p-1 rounded-full glass"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.06 } }
+            }}
           >
             {NAV_LINKS.map((link) => {
               const isActive = activeId === link.href.replace("#", "");
               return (
-                <li key={link.href}>
+                <motion.li 
+                  key={link.href}
+                  variants={{
+                    hidden: { y: -8, opacity: 0 },
+                    visible: { y: 0, opacity: 1, transition: { ease: [0.16, 1, 0.3, 1], duration: 0.5 } }
+                  }}
+                >
                   <a
                     href={link.href}
+                    onMouseEnter={() => setCursorState("hover")}
+                    onMouseLeave={() => setCursorState("default")}
                     aria-current={isActive ? "page" : undefined}
-                    className={`relative flex items-center px-3.5 py-1.5 rounded-full text-sm font-medium
+                    className={`group relative flex items-center px-3.5 py-1.5 rounded-full text-sm font-medium
                                 transition-colors duration-200 select-none
-                      ${isActive ? "text-white" : "text-muted hover:text-zinc-200"}`}
+                      ${isActive ? "text-white" : "text-muted hover:text-white"}`}
                   >
-                    {/* Sliding background pill — only rendered for the active link.
-                        layoutId causes Framer to animate it between positions. */}
+                    {/* Sliding background pill */}
                     {isActive && (
                       <motion.div
                         layoutId="nav-pill"
@@ -110,11 +131,21 @@ export function Navbar() {
                       />
                     )}
                     <span className="relative z-10">{link.label}</span>
+                    
+                    {/* Hover underline */}
+                    {!isActive && (
+                      <motion.span
+                        className="absolute bottom-1 left-3.5 right-3.5 h-[1px] bg-white/50 origin-left"
+                        initial={{ scaleX: 0 }}
+                        whileHover={{ scaleX: 1 }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      />
+                    )}
                   </a>
-                </li>
+                </motion.li>
               );
             })}
-          </ul>
+          </motion.ul>
         </LayoutGroup>
 
         {/* Desktop CTA */}

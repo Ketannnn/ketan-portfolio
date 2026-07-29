@@ -17,9 +17,18 @@ const config: Config = {
         },
         muted: "#71717a",
         subtle: "#52525b",
+        "stone-400": "#a8a29e",
       },
       fontFamily: {
         sans: ["Inter Variable", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+      },
+      transitionTimingFunction: {
+        "expo-out": "cubic-bezier(0.16, 1, 0.3, 1)",
+      },
+      fontSize: {
+        "display-sm": ["4rem", { lineHeight: "1" }],
+        "display-md": ["5.5rem", { lineHeight: "1" }],
+        "display-lg": ["7rem", { lineHeight: "1" }],
       },
       boxShadow: {
         glow: "0 0 60px rgba(99,102,241,0.18)",

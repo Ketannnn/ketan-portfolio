@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 import { ExternalLink, ArrowUpRight } from "lucide-react";
 import { SectionHeader } from "../ui/SectionHeader";
-import { GlassCard } from "../ui/GlassCard";
+import { ProjectCard } from "../ui/ProjectCard";
 import { SkillBadge } from "../ui/SkillBadge";
 import { Button } from "../ui/Button";
 import { AiFitnessMock } from "../mocks/AiFitnessMock";
 import { projects, type Project } from "../../data/projects";
-import { useScrollReveal, fadeUp, staggerContainer, staggerItem } from "../../hooks/useScrollReveal";
+import { useScrollReveal, fadeUp, staggerContainer } from "../../hooks/useScrollReveal";
 
 /**
  * Renders the right-column visual for a project card.
@@ -18,15 +18,15 @@ import { useScrollReveal, fadeUp, staggerContainer, staggerItem } from "../../ho
 function ProjectVisual({ project }: { project: Project }) {
   if (project.screenshotUrl) {
     return (
-      // overflow-hidden clips the scale transform; bg-[#090d17] matches the
-      // screenshot's dark background to prevent white flash during lazy load.
       <div className="overflow-hidden rounded-xl border border-white/10 bg-[#090d17]">
-        <img
+        <motion.img
           src={project.screenshotUrl}
           alt={`${project.title} — application screenshot`}
           width={1024}
           height={615}
-          className="w-full h-auto block transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          className="w-full h-auto block"
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           loading="lazy"
           decoding="async"
         />
@@ -78,18 +78,33 @@ export function Projects() {
           {/* Project cards */}
           <div className="space-y-8">
             {projects.map((project, index) => (
-              <motion.div key={project.id} variants={staggerItem}>
-                <GlassCard
-                  as="article"
-                  className="p-6 sm:p-8 grid lg:grid-cols-2 gap-8 items-start group"
-                >
+              <motion.div 
+                key={project.id} 
+                variants={{
+                  hidden: { opacity: 0, y: 40, x: index % 2 === 0 ? -30 : 30 },
+                  visible: { 
+                    opacity: 1, 
+                    y: 0, 
+                    x: 0, 
+                    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } 
+                  }
+                }}
+              >
+                <ProjectCard>
                   {/* Left — info */}
                   <div className="flex flex-col gap-5">
                     {/* Title + status */}
                     <div>
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <h3 className="text-lg font-semibold text-white">
-                          {project.title}
+                        <h3 className="text-lg font-semibold text-white cursor-default">
+                          <motion.span 
+                            className="inline-block"
+                            initial={{ x: 0 }}
+                            whileHover={{ x: 4 }}
+                            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                          >
+                            {project.title}
+                          </motion.span>
                         </h3>
                         {project.status && (
                           <span className="text-[10px] font-semibold tracking-widest uppercase px-2 py-0.5 rounded-full bg-yellow-400/10 border border-yellow-400/25 text-yellow-400">
@@ -155,7 +170,7 @@ export function Projects() {
                   <div className="w-full">
                     <ProjectVisual project={project} />
                   </div>
-                </GlassCard>
+                </ProjectCard>
               </motion.div>
             ))}
           </div>

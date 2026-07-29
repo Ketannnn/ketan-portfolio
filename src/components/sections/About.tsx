@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Terminal, Sparkles, Target } from "lucide-react";
 import { SectionHeader } from "../ui/SectionHeader";
-import { GlassCard } from "../ui/GlassCard";
 import { aboutBio, aboutCards, type AboutCard } from "../../data/about";
 import {
   useScrollReveal,
@@ -45,17 +44,27 @@ export function About() {
               />
             </motion.div>
 
-            {/* Bio — plain div, no animation.
-             * motion.div variants={fadeUp} was unreliable here because this element
-             * is inside a non-motion <div> parent inside the outer staggerContainer.
-             * Framer Motion's variant propagation through non-motion elements doesn't
-             * reliably fire the visible state. The SectionHeader's entrance animation
-             * above is sufficient — body text should always be immediately readable. */}
-            <div className="space-y-5 text-zinc-400 leading-[1.8]">
+            {/* Bio with text wipe reveal */}
+            <div className="space-y-5 text-zinc-400 leading-[1.8] mt-8">
               {aboutBio.map((paragraph, i) => (
-                <p key={i} className="text-base sm:text-lg">
-                  {paragraph}
-                </p>
+                <div key={i} className="overflow-hidden">
+                  <motion.p
+                    className="text-base sm:text-lg"
+                    variants={{
+                      hidden: { y: "100%" },
+                      visible: { 
+                        y: 0, 
+                        transition: { 
+                          duration: 0.6, 
+                          delay: i * 0.1, 
+                          ease: [0.16, 1, 0.3, 1] 
+                        } 
+                      }
+                    }}
+                  >
+                    {paragraph}
+                  </motion.p>
+                </div>
               ))}
             </div>
           </div>
@@ -66,26 +75,48 @@ export function About() {
               const Icon = ICON_MAP[card.iconKey];
               return (
                 <motion.div key={card.id} variants={staggerItem}>
-                  <GlassCard className="p-5 flex items-start gap-4">
+                  <motion.div
+                    className="p-5 flex items-start gap-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md overflow-hidden relative group"
+                    whileHover="hover"
+                    initial="rest"
+                  >
+                    {/* Hover Glow */}
+                    <motion.div 
+                      className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ boxShadow: "inset 0 0 20px rgba(99,102,241,0.06)" }}
+                    />
+                    
                     {/* Icon — only sparkles uses accent; others use zinc for variety */}
                     <div
-                      className={`shrink-0 p-3 rounded-lg mt-0.5 border ${
+                      className={`shrink-0 p-3 rounded-lg mt-0.5 border relative z-10 transition-colors duration-300 group-hover:border-white/20 ${
                         card.iconKey === "sparkles"
                           ? "bg-accent-muted border-accent/20"
                           : "bg-white/4 border-white/10"
                       }`}
                     >
-                      <Icon
-                        size={18}
-                        className={
-                          card.iconKey === "sparkles"
-                            ? "text-accent"
-                            : "text-zinc-300"
-                        }
-                      />
+                      <motion.div
+                        variants={{
+                          rest: { x: 0 },
+                          hover: { 
+                            x: card.iconKey === "terminal" ? [0, 2, -2, 0] : 0,
+                            rotate: card.iconKey === "sparkles" ? [0, 15, -15, 0] : 0,
+                            scale: card.iconKey === "target" ? [1, 1.1, 1] : 1,
+                            transition: { duration: 0.4 } 
+                          }
+                        }}
+                      >
+                        <Icon
+                          size={18}
+                          className={
+                            card.iconKey === "sparkles"
+                              ? "text-accent"
+                              : "text-zinc-300"
+                          }
+                        />
+                      </motion.div>
                     </div>
 
-                    <div>
+                    <div className="relative z-10">
                       <p className="text-sm font-semibold text-white leading-tight">
                         {card.label}
                       </p>
@@ -93,7 +124,7 @@ export function About() {
                         {card.description}
                       </p>
                     </div>
-                  </GlassCard>
+                  </motion.div>
                 </motion.div>
               );
             })}
