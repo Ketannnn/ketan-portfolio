@@ -4,7 +4,6 @@ import { SectionHeader } from "../ui/SectionHeader";
 import { ProjectCard } from "../ui/ProjectCard";
 import { SkillBadge } from "../ui/SkillBadge";
 import { Button } from "../ui/Button";
-import { AiFitnessMock } from "../mocks/AiFitnessMock";
 import { projects, type Project } from "../../data/projects";
 import { useScrollReveal, fadeUp, staggerContainer } from "../../hooks/useScrollReveal";
 
@@ -16,26 +15,25 @@ import { useScrollReveal, fadeUp, staggerContainer } from "../../hooks/useScroll
  * - Falls back to the AiFitnessMock interactive component otherwise.
  */
 function ProjectVisual({ project }: { project: Project }) {
-  if (project.screenshotUrl) {
-    return (
-      <div className="overflow-hidden rounded-xl border border-white/10 bg-[#090d17]">
-        <motion.img
-          src={project.screenshotUrl}
-          alt={`${project.title} — application screenshot`}
-          width={1024}
-          height={615}
-          className="w-full h-auto block"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-    );
-  }
-  // Fallback: interactive mock for projects without a screenshot yet
-  return <AiFitnessMock />;
+  if (!project.screenshotUrl) return null;
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-white/10 bg-[#090d17]">
+      <motion.img
+        src={project.screenshotUrl}
+        alt={`${project.title} — application screenshot`}
+        width={1024}
+        height={615}
+        className="w-full h-auto block"
+        whileHover={{ scale: 1.02 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  );
 }
+
 
 export function Projects() {
   const { ref, isInView } = useScrollReveal();
@@ -45,7 +43,7 @@ export function Projects() {
       id="projects"
       role="region"
       aria-label="Selected projects"
-      className="py-24 sm:py-32"
+      className="py-16 sm:py-20 contain-paint"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
@@ -78,15 +76,15 @@ export function Projects() {
           {/* Project cards */}
           <div className="space-y-8">
             {projects.map((project, index) => (
-              <motion.div 
-                key={project.id} 
+              <motion.div
+                key={project.id}
                 variants={{
                   hidden: { opacity: 0, y: 40, x: index % 2 === 0 ? -30 : 30 },
-                  visible: { 
-                    opacity: 1, 
-                    y: 0, 
-                    x: 0, 
-                    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } 
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    x: 0,
+                    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
                   }
                 }}
               >
@@ -97,7 +95,7 @@ export function Projects() {
                     <div>
                       <div className="flex flex-wrap items-center gap-2 mb-2">
                         <h3 className="text-lg font-semibold text-white cursor-default">
-                          <motion.span 
+                          <motion.span
                             className="inline-block"
                             initial={{ x: 0 }}
                             whileHover={{ x: 4 }}

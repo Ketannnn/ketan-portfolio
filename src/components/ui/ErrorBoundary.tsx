@@ -28,7 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {
       return this.props.fallback || (
         <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-base/50 rounded-xl border border-red-500/20">
           <h2 className="text-red-400 font-mono text-sm mb-2">3D Scene Failed to Load</h2>
-          <p className="text-zinc-500 text-xs max-w-xs">Please ensure your Spline URL is valid and publicly accessible.</p>
+          <p className="text-zinc-400 text-xs max-w-xs">Please ensure your Spline URL is valid and publicly accessible.</p>
         </div>
       );
     }

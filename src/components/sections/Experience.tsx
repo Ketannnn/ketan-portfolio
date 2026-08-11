@@ -26,7 +26,7 @@ export function Experience() {
       id="experience"
       role="region"
       aria-label="Work experience"
-      className="py-24 sm:py-32"
+      className="py-16 sm:py-20 contain-paint"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
@@ -82,7 +82,7 @@ export function Experience() {
                     >
                       <Icon
                         size={14}
-                        className={isLatest ? "text-accent" : "text-zinc-500"}
+                        className={isLatest ? "text-accent" : "text-zinc-400"}
                       />
                     </div>
 

@@ -53,11 +53,11 @@ export function ProjectCard({ children }: { children: React.ReactNode }) {
         rotateY,
         transformStyle: "preserve-3d",
       }}
-      className="relative p-6 sm:p-8 grid lg:grid-cols-2 gap-8 items-start group overflow-hidden rounded-2xl glass transition-colors duration-500 hover:border-accent/40"
+      className="relative p-6 sm:p-8 grid lg:grid-cols-2 gap-8 items-start group overflow-hidden rounded-2xl glass transition-colors duration-300 ease-out hover:border-accent/40"
     >
       {/* Spotlight Effect */}
       <div 
-        className="absolute inset-0 pointer-events-none z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        className="absolute inset-0 pointer-events-none z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"
         style={{
           background: "radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(99,102,241,0.08), transparent 80%)"
         }}

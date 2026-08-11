@@ -60,11 +60,12 @@ export function Navbar() {
   return (
     <header
       role="banner"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 will-change-transform
         ${scrolled
-          ? "bg-base/80 backdrop-blur-md border-b border-border shadow-[0_1px_0_rgba(255,255,255,0.04)]"
+          ? "bg-base/80 backdrop-blur-xl backdrop-saturate-150 border-b border-border shadow-[0_1px_0_rgba(255,255,255,0.04)]"
           : "bg-transparent"
         }`}
+      style={{ transform: "translateZ(0)" }}
     >
       <nav
         role="navigation"
@@ -183,10 +184,10 @@ export function Navbar() {
         ref={mobileMenuRef}
         id="mobile-menu"
         aria-hidden={!mobileOpen}
-        className={`md:hidden transition-all duration-300 overflow-hidden
-          ${mobileOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
+        className={`md:hidden absolute top-16 left-0 right-0 w-full transition-[opacity,transform] duration-200 ease-out
+          ${mobileOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"}`}
       >
-        <div className="bg-base/95 backdrop-blur-md border-t border-border px-4 py-4 flex flex-col gap-1">
+        <div className="bg-base/95 backdrop-blur-xl backdrop-saturate-150 border-t border-border px-4 py-4 flex flex-col gap-1">
           {NAV_LINKS.map((link) => {
             const isActive = activeId === link.href.replace("#", "");
             return (
@@ -195,7 +196,7 @@ export function Navbar() {
                 href={link.href}
                 onClick={closeMobile}
                 aria-current={isActive ? "page" : undefined}
-                className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
+                className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 ease-out
                   ${isActive
                     ? "text-white bg-white/10"
                     : "text-muted hover:text-white hover:bg-white/5"

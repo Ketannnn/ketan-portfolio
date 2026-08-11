@@ -24,7 +24,7 @@ export function About() {
       id="about"
       role="region"
       aria-label="About me"
-      className="py-24 sm:py-32"
+      className="py-16 sm:py-20"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
@@ -32,7 +32,7 @@ export function About() {
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid lg:grid-cols-2 gap-16 items-start"
+          className="grid lg:grid-cols-2 gap-16 items-center"
         >
           {/* ── LEFT: Bio ── */}
           <div>
@@ -47,24 +47,13 @@ export function About() {
             {/* Bio with text wipe reveal */}
             <div className="space-y-5 text-zinc-400 leading-[1.8] mt-8">
               {aboutBio.map((paragraph, i) => (
-                <div key={i} className="overflow-hidden">
-                  <motion.p
-                    className="text-base sm:text-lg"
-                    variants={{
-                      hidden: { y: "100%" },
-                      visible: { 
-                        y: 0, 
-                        transition: { 
-                          duration: 0.6, 
-                          delay: i * 0.1, 
-                          ease: [0.16, 1, 0.3, 1] 
-                        } 
-                      }
-                    }}
-                  >
-                    {paragraph}
-                  </motion.p>
-                </div>
+                <motion.p
+                  key={i}
+                  className="text-base sm:text-lg"
+                  variants={fadeUp}
+                >
+                  {paragraph}
+                </motion.p>
               ))}
             </div>
           </div>

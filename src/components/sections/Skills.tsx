@@ -13,7 +13,7 @@ import {
 } from "../../hooks/useScrollReveal";
 
 // Maps category IDs → Lucide icons for scannable category headers.
-// Icons are in text-zinc-500 (not accent) — they are structural, not emphasis.
+// Icons are in text-zinc-400 (not accent) — they are structural, not emphasis.
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   programming: Code2,
   "data-tools": Database,
@@ -33,7 +33,7 @@ export function Skills() {
       id="skills"
       role="region"
       aria-label="Technical skills"
-      className="py-24 sm:py-32"
+      className="py-16 sm:py-20 contain-paint"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
@@ -65,7 +65,7 @@ export function Skills() {
                     {/* Category label with icon — NOT in accent color */}
                     <div className="flex items-center gap-2 mb-5">
                       {Icon && (
-                        <Icon size={13} className="text-zinc-500 shrink-0" />
+                        <Icon size={13} className="text-zinc-400 shrink-0" />
                       )}
                       <h3 className="text-[11px] font-semibold tracking-widest uppercase text-muted font-mono">
                         {category.label}
@@ -97,10 +97,10 @@ export function Skills() {
           {languageCategory && (
             <motion.div variants={staggerItem} className="mt-5 max-w-3xl">
               <div className="flex items-center gap-2.5 px-0.5">
-                <Globe size={12} className="text-zinc-600 shrink-0" />
+                <Globe size={12} className="text-zinc-400 shrink-0" />
                 <p className="text-[11px] font-mono text-subtle">
                   {languageCategory.label.toLowerCase()}:{" "}
-                  <span className="text-zinc-500">
+                  <span className="text-zinc-400">
                     {languageCategory.skills.join(" · ")}
                   </span>
                 </p>

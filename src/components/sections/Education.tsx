@@ -18,7 +18,7 @@ export function Education() {
       id="education"
       role="region"
       aria-label="Education"
-      className="py-24 sm:py-32"
+      className="py-16 sm:py-20 contain-paint"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
@@ -60,7 +60,7 @@ export function Education() {
                       </div>
 
                       {/* Full institution name — secondary, smaller */}
-                      <p className="text-xs text-zinc-500 mb-1 leading-relaxed">
+                      <p className="text-xs text-zinc-400 mb-1 leading-relaxed">
                         {item.institution}
                       </p>
 

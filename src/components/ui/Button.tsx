@@ -48,7 +48,7 @@ export function Button({
   ...rest
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 cursor-pointer select-none whitespace-nowrap active:scale-[0.97]";
+    "inline-flex items-center justify-center font-medium rounded-lg transition duration-150 ease-out cursor-pointer select-none whitespace-nowrap active:scale-[0.97] hover:scale-[1.02]";
   const classes = `${base} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 
   const content = (

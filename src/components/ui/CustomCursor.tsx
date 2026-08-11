@@ -39,7 +39,7 @@ export function CustomCursor() {
       {/* DOT */}
       <motion.div
         aria-hidden="true"
-        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[100] -ml-1 -mt-1"
+        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[100] -ml-1 -mt-1 will-change-transform"
         style={{ x: dotX, y: dotY }}
         animate={{
           scale: cursorState === "hover" ? 0 : cursorState === "text" ? 0 : 1,
@@ -51,7 +51,7 @@ export function CustomCursor() {
       {/* RING */}
       <motion.div
         aria-hidden="true"
-        className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[99] -ml-4 -mt-4"
+        className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[99] -ml-4 -mt-4 will-change-transform"
         style={{ 
           x: ringX, 
           y: ringY,

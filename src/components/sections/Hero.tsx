@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useMotionTemplate } from "framer-motion";
 import { siteConfig } from "../../config/site";
 import { useMousePosition } from "../../hooks/useMousePosition";
 import { useParallax } from "../../hooks/useParallax";
@@ -23,7 +23,7 @@ function MagneticButton({ children, href, icon, variant, download, target, rel, 
       aria-label={ariaLabel}
       onMouseEnter={() => setCursorState("hover")}
       onMouseLeave={() => setCursorState("default")}
-      className={`relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
+      className={`relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition duration-200 ease-out ${
         variant === 'primary' 
           ? 'bg-white text-black hover:bg-zinc-200' 
           : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
@@ -42,28 +42,16 @@ export function Hero() {
   const { mouseX, mouseY } = useMousePosition();
   const { lightX, lightY, isActive: lightActive } = useCursorLight(mouseX, mouseY);
   
-  // Grid highlighting ref
-  const gridRef = useRef<HTMLDivElement>(null);
+
   
   // Parallax layers
   const bgParallax = useParallax(mouseX, mouseY, 25);
   const h1Parallax = useParallax(mouseX, mouseY, 12);
   const subtitleParallax = useParallax(mouseX, mouseY, 8);
 
-  useEffect(() => {
-    let animationFrameId: number;
-    
-    const updateGrid = () => {
-      if (gridRef.current) {
-        gridRef.current.style.setProperty('--cx', `${mouseX.get()}px`);
-        gridRef.current.style.setProperty('--cy', `${mouseY.get()}px`);
-      }
-      animationFrameId = requestAnimationFrame(updateGrid);
-    };
-    
-    updateGrid();
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [mouseX, mouseY]);
+  // Use Framer Motion template to derive mask strings dynamically
+  const maskImage = useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, black, transparent)`;
+  const lightBackground = useMotionTemplate`radial-gradient(600px circle at ${lightX}px ${lightY}px, rgba(99,102,241,0.06), transparent 40%)`;
 
   return (
     <section
@@ -72,33 +60,28 @@ export function Hero() {
       aria-label="Introduction"
       className="relative min-h-screen flex flex-col justify-center overflow-hidden"
     >
-      {/* Layer 0 — Breathing background gradients */}
+      {/* Layer 0 — Ambient Top Spotlight */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 pointer-events-none z-0"
       >
-        <motion.div 
-          style={{ x: bgParallax.x, y: bgParallax.y }}
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-indigo-600/8 blur-[120px] rounded-full"
-        />
-        <motion.div 
-          style={{ x: bgParallax.x, y: bgParallax.y }}
-          className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-700/5 blur-[100px] rounded-full"
+        <div 
+          className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 w-[600px] sm:w-[800px] h-[350px] sm:h-[450px] bg-gradient-to-tr from-indigo-500/15 via-purple-500/10 to-transparent blur-3xl rounded-full pointer-events-none will-change-transform"
+          style={{ transform: "translate(-50%, 0) translateZ(0)" }}
         />
       </motion.div>
 
       {/* Layer 1 — Engineering grid */}
-      <div
-        ref={gridRef}
+      <motion.div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none z-[1]"
         style={{
           backgroundImage: "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
           backgroundSize: "40px 40px",
-          maskImage: "radial-gradient(400px circle at var(--cx) var(--cy), black, transparent)",
-          WebkitMaskImage: "radial-gradient(400px circle at var(--cx) var(--cy), black, transparent)"
+          maskImage,
+          WebkitMaskImage: maskImage
         }}
       />
 
@@ -107,7 +90,7 @@ export function Hero() {
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none z-[2]"
         style={{
-          background: `radial-gradient(600px circle at ${lightX.get()}px ${lightY.get()}px, rgba(99,102,241,0.06), transparent 40%)`
+          background: lightBackground
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: lightActive ? 1 : 0 }}
@@ -125,10 +108,10 @@ export function Hero() {
               rotateX: bgParallax.y,
               rotateY: bgParallax.x,
             }}
-            className="relative w-[300px] h-[400px] sm:w-[400px] sm:h-[500px] flex items-center justify-center group"
+            className="relative w-[300px] h-[400px] sm:w-[400px] sm:h-[500px] flex items-center justify-center group will-change-transform"
           >
             {/* Outer Glow */}
-            <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full transition-transform duration-1000 group-hover:scale-110" />
+            <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full transition-transform duration-700 ease-out group-hover:scale-110" />
             
             {/* Floating Glass Shape */}
             <motion.div 
@@ -137,9 +120,10 @@ export function Hero() {
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(99,102,241,0.3),transparent_50%)]" />
               <img 
-                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
+                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" 
                 alt="Abstract Concept" 
-                className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-700 hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-500 ease-out hover:scale-105"
+                decoding="async"
               />
               <span className="relative z-10 text-[120px] sm:text-[180px] font-serif text-white/10 pointer-events-none select-none mix-blend-overlay">
                 {siteConfig.initials}
@@ -162,7 +146,7 @@ export function Hero() {
             <p className="text-xl md:text-2xl text-stone-400 font-mono tracking-wide mb-2">
               Hello! I'm
             </p>
-            <h1 className="text-[clamp(3rem,8vw,6rem)] leading-[0.9] font-bold text-white tracking-[-0.04em] uppercase">
+            <h1 className="text-[clamp(3rem,8vw,6rem)] leading-[0.95] font-bold text-white tracking-[-0.04em] uppercase">
               {siteConfig.name.split(' ')[0]}
               <br />
               <span className="text-gradient">
@@ -197,10 +181,10 @@ export function Hero() {
             <p className="text-xl md:text-2xl text-stone-400 font-mono tracking-wide mb-2">
               A Creative
             </p>
-            <h2 className="text-[clamp(2.5rem,6vw,5rem)] leading-[0.9] font-bold text-white tracking-[-0.04em] uppercase text-gradient opacity-60">
+            <h2 className="text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] font-bold text-stone-400 tracking-[-0.04em] uppercase text-gradient">
               DEVELOPER
               <br />
-              <span className="text-white opacity-100">ENGINEER</span>
+              <span className="text-white">ENGINEER</span>
             </h2>
           </motion.div>
         </div>
