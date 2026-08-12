@@ -7,6 +7,7 @@ import { useParallax } from "../../hooks/useParallax";
 import { useMagnetic } from "../../hooks/useMagnetic";
 import { useCursorLight } from "../../hooks/useCursorLight";
 import { useCursor } from "../../context/CursorContext";
+import Hero3D from "../ui/Hero3D";
 
 function MagneticButton({ children, href, icon, variant, download, target, rel, ariaLabel }: any) {
   const { ref, x, y, textX, textY } = useMagnetic(0.3);
@@ -151,8 +152,14 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* Column 2 - Gradient Card */}
-      <div className="relative h-full flex items-center justify-center z-10 w-full pb-20 lg:pb-0">
+      {/* Column 2 - Gradient Card and 3D Avatar */}
+      <div className="relative h-full flex items-center justify-center z-10 w-full pb-20 lg:pb-0 overflow-hidden min-h-[400px] sm:min-h-[500px]">
+        
+        {/* 3D Avatar */}
+        <div className="absolute inset-0 z-10 overflow-hidden">
+          <Hero3D />
+        </div>
+
         <motion.div 
           style={{ 
             x: h1Parallax.x, 
