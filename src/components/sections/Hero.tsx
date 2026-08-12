@@ -58,7 +58,7 @@ export function Hero() {
       id="home"
       role="region"
       aria-label="Introduction"
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+      className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20 py-24 min-h-[90vh] px-6 lg:px-12 relative overflow-hidden"
     >
       {/* Layer 0 — Ambient Top Spotlight */}
       <motion.div
@@ -96,119 +96,114 @@ export function Hero() {
         animate={{ opacity: lightActive ? 1 : 0 }}
         transition={{ duration: 1 }}
       />
-      {/* (React requires motion value update inside style or via useMotionTemplate, but here we can rely on a simpler approach if needed.
-           Actually, Framer Motion handles motion values in style well, but template literals need useMotionTemplate.
-           Let's fix this in the next pass if it fails.) */}
-        {/* 3D INTERACTIVE CSS ORB - FREE & PERFORMANCE FRIENDLY */}
-        <div className="absolute inset-0 z-0 pointer-events-none flex justify-center items-center h-screen pt-20">
-          <motion.div 
-            style={{ 
-              x: h1Parallax.x, 
-              y: h1Parallax.y,
-              rotateX: bgParallax.y,
-              rotateY: bgParallax.x,
-            }}
-            className="relative w-[300px] h-[400px] sm:w-[400px] sm:h-[500px] flex items-center justify-center group will-change-transform"
-          >
-            {/* Outer Glow */}
-            <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full transition-transform duration-700 ease-out group-hover:scale-110" />
-            
-            {/* Floating Glass Shape */}
-            <motion.div 
-              style={{ x: h1Parallax.x, y: h1Parallax.y }}
-              className="absolute w-full h-full rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-xl overflow-hidden shadow-2xl flex items-center justify-center"
-            >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(99,102,241,0.3),transparent_50%)]" />
-              <img 
-                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" 
-                alt="Abstract Concept" 
-                className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-500 ease-out hover:scale-105"
-                decoding="async"
-              />
-              <span className="relative z-10 text-[120px] sm:text-[180px] font-serif text-white/10 pointer-events-none select-none mix-blend-overlay">
-                {siteConfig.initials}
-              </span>
-            </motion.div>
-          </motion.div>
-        </div>
 
-        {/* Content Layer z-10 */}
-        <div className="relative z-10 max-w-[1400px] mx-auto px-6 h-screen flex items-center justify-between pointer-events-none pt-20">
-          
-          {/* Left Side: Hello I'm Name */}
-          <motion.div 
-            style={{ x: h1Parallax.x, y: h1Parallax.y }}
-            initial={{ x: -50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col pointer-events-auto mt-[-15%]"
-          >
-            <p className="text-xl md:text-2xl text-stone-400 font-mono tracking-wide mb-2">
-              Hello! I'm
-            </p>
-            <h1 className="text-[clamp(3rem,8vw,6rem)] leading-[0.95] font-bold text-white tracking-[-0.04em] uppercase">
-              {siteConfig.name.split(' ')[0]}
-              <br />
-              <span className="text-gradient">
-                {siteConfig.name.split(' ')[1] || ''}
-              </span>
-            </h1>
-            
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center gap-3 mt-8"
-            >
-              <MagneticButton
-                variant="primary"
-                href="#projects"
-                icon={<ArrowRight size={16} />}
-              >
-                View My Work
-              </MagneticButton>
-            </motion.div>
-          </motion.div>
+      {/* Column 1 - Text */}
+      <div className="flex flex-col items-start text-left z-10 pointer-events-auto w-full max-w-2xl mx-auto lg:mx-0 pt-20 lg:pt-0">
+        <motion.div 
+          style={{ x: h1Parallax.x, y: h1Parallax.y }}
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.7, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col w-full"
+        >
+          <p className="text-xl md:text-2xl text-stone-400 font-mono tracking-wide mb-2">
+            Hello! I'm
+          </p>
+          <h1 className="text-[clamp(3rem,8vw,6rem)] leading-[0.95] font-bold text-white tracking-[-0.04em] uppercase">
+            {siteConfig.name.split(' ')[0]}
+            <br />
+            <span className="text-gradient">
+              {siteConfig.name.split(' ')[1] || ''}
+            </span>
+          </h1>
+        </motion.div>
 
-          {/* Right Side: A Creative Developer */}
-          <motion.div 
-            style={{ x: subtitleParallax.x, y: subtitleParallax.y }}
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-end text-right pointer-events-auto mt-[15%] hidden md:flex"
-          >
-            <p className="text-xl md:text-2xl text-stone-400 font-mono tracking-wide mb-2">
-              A Creative
-            </p>
-            <h2 className="text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] font-bold text-stone-400 tracking-[-0.04em] uppercase text-gradient">
-              DEVELOPER
-              <br />
-              <span className="text-white">ENGINEER</span>
-            </h2>
-          </motion.div>
-        </div>
+        <motion.div 
+          style={{ x: subtitleParallax.x, y: subtitleParallax.y }}
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-start mt-6 w-full"
+        >
+          <p className="text-xl md:text-2xl text-stone-400 font-mono tracking-wide mb-2">
+            A Creative
+          </p>
+          <h2 className="text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] font-bold text-stone-400 tracking-[-0.04em] uppercase text-gradient">
+            DEVELOPER
+            <br />
+            <span className="text-white">ENGINEER</span>
+          </h2>
+        </motion.div>
 
-        {/* Scroll cue */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2.2, duration: 0.6 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-subtle"
-          aria-hidden="true"
+          transition={{ delay: 1.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="flex items-center gap-3 mt-12 w-full"
         >
-          <span className="text-[10px] tracking-widest uppercase font-mono">
-            scroll
-          </span>
-          <div className="w-[1px] h-12 bg-white/10 relative overflow-hidden">
-            <motion.div 
-              initial={{ y: "-100%" }}
-              animate={{ y: "100%" }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-              className="absolute inset-0 w-full h-full bg-white/40"
-            />
-          </div>
+          <MagneticButton
+            variant="primary"
+            href="#projects"
+            icon={<ArrowRight size={16} />}
+          >
+            View My Work
+          </MagneticButton>
         </motion.div>
+      </div>
+
+      {/* Column 2 - Gradient Card */}
+      <div className="relative h-full flex items-center justify-center z-10 w-full pb-20 lg:pb-0">
+        <motion.div 
+          style={{ 
+            x: h1Parallax.x, 
+            y: h1Parallax.y,
+            rotateX: bgParallax.y,
+            rotateY: bgParallax.x,
+          }}
+          className="relative w-[300px] h-[400px] sm:w-[400px] sm:h-[500px] flex items-center justify-center group will-change-transform"
+        >
+          {/* Outer Glow */}
+          <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full transition-transform duration-700 ease-out group-hover:scale-110" />
+          
+          {/* Floating Glass Shape */}
+          <motion.div 
+            style={{ x: h1Parallax.x, y: h1Parallax.y }}
+            className="absolute w-full h-full rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-xl overflow-hidden shadow-2xl flex items-center justify-center"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(99,102,241,0.3),transparent_50%)]" />
+            <img 
+              src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" 
+              alt="Abstract Concept" 
+              className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-500 ease-out hover:scale-105"
+              decoding="async"
+            />
+            <span className="relative z-10 text-[120px] sm:text-[180px] font-serif text-white/10 pointer-events-none select-none mix-blend-overlay">
+              {siteConfig.initials}
+            </span>
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* Scroll cue */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2.2, duration: 0.6 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-subtle"
+        aria-hidden="true"
+      >
+        <span className="text-[10px] tracking-widest uppercase font-mono">
+          scroll
+        </span>
+        <div className="w-[1px] h-12 bg-white/10 relative overflow-hidden">
+          <motion.div 
+            initial={{ y: "-100%" }}
+            animate={{ y: "100%" }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+            className="absolute inset-0 w-full h-full bg-white/40"
+          />
+        </div>
+      </motion.div>
     </section>
   );
 }
