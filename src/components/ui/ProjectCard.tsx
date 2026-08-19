@@ -5,11 +5,12 @@ import { useCursor } from "../../context/CursorContext";
 
 export function ProjectCard({ children }: { children: React.ReactNode }) {
   const cardRef = useRef<HTMLElement>(null);
+  const rectRef = useRef<{ left: number, top: number, width: number, height: number } | null>(null);
   const { setCursorState } = useCursor();
 
   // Local mouse position tracking for the card
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
 
   // Smooth values for 3D tilt
   const smoothX = useSmoothValue(mouseX, { stiffness: 120, damping: 20 });
@@ -20,20 +21,32 @@ export function ProjectCard({ children }: { children: React.ReactNode }) {
   const rotateY = useTransform(smoothX, [0, 1], [-4, 4]);
   const rotateX = useTransform(smoothY, [0, 1], [4, -4]); // Invert Y for correct tilt
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+  const handleMouseEnter = () => {
+    setCursorState("default");
     if (!cardRef.current) return;
-    const { left, top, width, height } = cardRef.current.getBoundingClientRect();
+    const rect = cardRef.current.getBoundingClientRect();
+    rectRef.current = {
+      left: rect.left + window.scrollX,
+      top: rect.top + window.scrollY,
+      width: rect.width,
+      height: rect.height
+    };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (!rectRef.current || !cardRef.current) return;
+    const { left, top, width, height } = rectRef.current;
     
-    // Normalize mouse position relative to card (0 to 1)
-    const x = (e.clientX - left) / width;
-    const y = (e.clientY - top) / height;
+    // Normalize mouse position relative to card (0 to 1) using page coordinates
+    const x = (e.pageX - left) / width;
+    const y = (e.pageY - top) / height;
 
     mouseX.set(x);
     mouseY.set(y);
 
     // Update CSS variables for spotlight effect
-    cardRef.current.style.setProperty("--mouse-x", `${e.clientX - left}px`);
-    cardRef.current.style.setProperty("--mouse-y", `${e.clientY - top}px`);
+    cardRef.current.style.setProperty("--mouse-x", `${e.pageX - left}px`);
+    cardRef.current.style.setProperty("--mouse-y", `${e.pageY - top}px`);
   };
 
   const handleMouseLeave = () => {
@@ -45,9 +58,9 @@ export function ProjectCard({ children }: { children: React.ReactNode }) {
   return (
     <motion.article
       ref={cardRef}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onMouseEnter={() => setCursorState("default")}
       style={{
         rotateX,
         rotateY,

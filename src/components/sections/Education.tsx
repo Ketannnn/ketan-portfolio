@@ -31,7 +31,7 @@ export function Education() {
           <motion.div variants={fadeUp} className="mb-14">
             <SectionHeader
               eyebrow="// education"
-              heading="Where I study"
+              heading="Where I studied"
             />
           </motion.div>
 

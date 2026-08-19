@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, useAnimations, Center } from '@react-three/drei';
 import * as THREE from 'three';
@@ -6,6 +6,9 @@ function Avatar() {
   const { scene, animations } = useGLTF('/avatar.glb');
   const { actions } = useAnimations(animations, scene);
 
+  const headBone = useMemo(() => {
+    return scene.getObjectByName('Head') || scene.getObjectByName('mixamorigHead');
+  }, [scene]);
 
   useEffect(() => {
     // 1. Play Idle Animation
@@ -42,11 +45,10 @@ function Avatar() {
 
   // 3. Mouse Tracking (Only the head)
   useFrame((state) => {
-    const head = scene.getObjectByName('Head') || scene.getObjectByName('mixamorigHead');
-    if (head) {
+    if (headBone) {
       // Lerp smooths the movement so it doesn't snap instantly
-      head.rotation.y = THREE.MathUtils.lerp(head.rotation.y, state.pointer.x / 2.5, 0.1);
-      head.rotation.x = THREE.MathUtils.lerp(head.rotation.x, -state.pointer.y / 2.5, 0.1);
+      headBone.rotation.y = THREE.MathUtils.lerp(headBone.rotation.y, state.pointer.x / 2.5, 0.1);
+      headBone.rotation.x = THREE.MathUtils.lerp(headBone.rotation.x, -state.pointer.y / 2.5, 0.1);
     }
   });
 
@@ -61,7 +63,7 @@ function Avatar() {
 export default function Hero3D() {
   return (
     <div className="absolute inset-0 z-50 w-full h-full min-h-[500px]">
-      <Canvas camera={{ position: [0, 0, 2.5], fov: 40 }}>
+      <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 2.5], fov: 40 }}>
         <ambientLight intensity={1.5} />
         <directionalLight position={[2, 5, 2]} intensity={2.5} />
 
