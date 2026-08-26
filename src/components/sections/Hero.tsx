@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { ArrowRight } from "lucide-react";
-import { motion, useMotionTemplate, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
 import { siteConfig } from "../../config/site";
 import { useMousePosition } from "../../hooks/useMousePosition";
 import { useParallax } from "../../hooks/useParallax";
@@ -163,32 +163,36 @@ export function Hero() {
           </Suspense>
         </div>
 
-        <motion.div 
-          style={{ 
-            rotateX: bgParallax.y,
-            rotateY: bgParallax.x,
-          }}
-          className="relative w-[300px] h-[400px] sm:w-[400px] sm:h-[500px] flex items-center justify-center group will-change-transform"
-        >
+        <div className="relative w-[300px] h-[400px] sm:w-[400px] sm:h-[500px] flex items-center justify-center group">
           {/* Outer Glow */}
           <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full transition-transform duration-700 ease-out group-hover:scale-110" />
           
-          {/* Floating Glass Shape */}
+          {/* Floating Glass Shape (Static to avoid expensive blur recalculations) */}
           <div 
             className="absolute w-full h-full rounded-[2rem] border border-white/10 bg-[#090d17]/40 backdrop-blur-md overflow-hidden shadow-2xl flex items-center justify-center"
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(99,102,241,0.3),transparent_50%)]" />
-            <img 
-              src="/images/hero-bg.jpg" 
-              alt="Abstract Concept" 
-              className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-500 ease-out hover:scale-105"
-              decoding="async"
-            />
-            <span className="relative z-10 text-[120px] sm:text-[180px] font-serif text-white/10 pointer-events-none select-none mix-blend-overlay">
-              {siteConfig.initials}
-            </span>
-          </motion.div>
-        </motion.div>
+            
+            <motion.div
+              style={{ 
+                rotateX: bgParallax.y,
+                rotateY: bgParallax.x,
+                scale: 1.05
+              }}
+              className="absolute inset-0 w-full h-full flex items-center justify-center will-change-transform"
+            >
+              <img 
+                src="/images/hero-bg.jpg" 
+                alt="Abstract Concept" 
+                className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-500 ease-out group-hover:scale-105"
+                decoding="async"
+              />
+              <span className="relative z-10 text-[120px] sm:text-[180px] font-serif text-white/10 pointer-events-none select-none mix-blend-overlay">
+                {siteConfig.initials}
+              </span>
+            </motion.div>
+          </div>
+        </div>
       </div>
 
       {/* Scroll cue */}
