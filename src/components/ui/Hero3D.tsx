@@ -1,6 +1,7 @@
-import { Suspense, useEffect, useMemo } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, useAnimations, Center } from '@react-three/drei';
+import { useGLTF, useAnimations, Center, PerformanceMonitor } from '@react-three/drei';
+import { useInView } from 'framer-motion';
 import * as THREE from 'three';
 function Avatar() {
   const { scene, animations } = useGLTF('/avatar.glb');
@@ -61,16 +62,22 @@ function Avatar() {
 }
 
 export default function Hero3D() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef);
+  const [dpr, setDpr] = useState(1.5);
+
   return (
-    <div className="absolute inset-0 z-50 w-full h-full min-h-[500px]">
-      <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 2.5], fov: 40 }}>
+    <div ref={containerRef} className="absolute inset-0 z-50 w-full h-full min-h-[500px]">
+      <Canvas 
+        frameloop={isInView ? 'always' : 'demand'} 
+        dpr={dpr} 
+        camera={{ position: [0, 0, 2.5], fov: 40 }}
+      >
+        <PerformanceMonitor onDecline={() => setDpr(1)} />
         <ambientLight intensity={1.5} />
         <directionalLight position={[2, 5, 2]} intensity={2.5} />
 
-        <Suspense fallback={
-          // If the model is slow to load, a red box will appear first
-          <mesh><boxGeometry args={[0.5, 0.5, 0.5]} /><meshBasicMaterial color="red" /></mesh>
-        }>
+        <Suspense fallback={null}>
           <Avatar />
         </Suspense>
       </Canvas>

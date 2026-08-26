@@ -1,13 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { ArrowRight } from "lucide-react";
-import { motion, useMotionTemplate } from "framer-motion";
+import { motion, useMotionTemplate, useTransform } from "framer-motion";
 import { siteConfig } from "../../config/site";
 import { useMousePosition } from "../../hooks/useMousePosition";
 import { useParallax } from "../../hooks/useParallax";
 import { useMagnetic } from "../../hooks/useMagnetic";
 import { useCursorLight } from "../../hooks/useCursorLight";
 import { useCursor } from "../../context/CursorContext";
-import Hero3D from "../ui/Hero3D";
+const Hero3D = React.lazy(() => import("../ui/Hero3D"));
 
 function MagneticButton({ children, href, icon, variant, download, target, rel, ariaLabel }: any) {
   const { ref, x, y, textX, textY } = useMagnetic(0.3);
@@ -50,9 +50,9 @@ export function Hero() {
   const h1Parallax = useParallax(mouseX, mouseY, 12);
   const subtitleParallax = useParallax(mouseX, mouseY, 8);
 
-  // Use Framer Motion template to derive mask strings dynamically
-  const maskImage = useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, black, transparent)`;
-  const lightBackground = useMotionTemplate`radial-gradient(600px circle at ${lightX}px ${lightY}px, rgba(99,102,241,0.06), transparent 40%)`;
+  // Derive light transforms for GPU-accelerated motion (radius 600px -> center offset -600px)
+  const lightTransformX = useTransform(lightX, (x) => x - 600);
+  const lightTransformY = useTransform(lightY, (y) => y - 600);
 
   return (
     <section
@@ -74,24 +74,26 @@ export function Hero() {
         />
       </motion.div>
 
-      {/* Layer 1 — Engineering grid */}
-      <motion.div
+      {/* Layer 1 — Engineering grid (Static mask avoids GPU repaint storm) */}
+      <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none z-[1]"
         style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
           backgroundSize: "40px 40px",
-          maskImage,
-          WebkitMaskImage: maskImage
+          maskImage: "radial-gradient(circle at center, black 10%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(circle at center, black 10%, transparent 80%)"
         }}
       />
 
-      {/* Layer 2 — Cursor light */}
+      {/* Layer 2 — Cursor light (GPU transform avoids background layout recalculation) */}
       <motion.div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none z-[2]"
+        className="absolute top-0 left-0 pointer-events-none z-[2] w-[1200px] h-[1200px] rounded-full"
         style={{
-          background: lightBackground
+          background: "radial-gradient(circle at center, rgba(99,102,241,0.06), transparent 40%)",
+          x: lightTransformX,
+          y: lightTransformY
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: lightActive ? 1 : 0 }}
@@ -155,15 +157,14 @@ export function Hero() {
       {/* Column 2 - Gradient Card and 3D Avatar */}
       <div className="relative h-full flex items-center justify-center z-10 w-full pb-20 lg:pb-0 overflow-hidden min-h-[400px] sm:min-h-[500px]">
         
-        {/* 3D Avatar */}
         <div className="absolute inset-0 z-10 overflow-hidden">
-          <Hero3D />
+          <Suspense fallback={null}>
+            <Hero3D />
+          </Suspense>
         </div>
 
         <motion.div 
           style={{ 
-            x: h1Parallax.x, 
-            y: h1Parallax.y,
             rotateX: bgParallax.y,
             rotateY: bgParallax.x,
           }}
@@ -173,13 +174,12 @@ export function Hero() {
           <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full transition-transform duration-700 ease-out group-hover:scale-110" />
           
           {/* Floating Glass Shape */}
-          <motion.div 
-            style={{ x: h1Parallax.x, y: h1Parallax.y }}
-            className="absolute w-full h-full rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-xl overflow-hidden shadow-2xl flex items-center justify-center"
+          <div 
+            className="absolute w-full h-full rounded-[2rem] border border-white/10 bg-[#090d17]/40 backdrop-blur-md overflow-hidden shadow-2xl flex items-center justify-center"
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(99,102,241,0.3),transparent_50%)]" />
             <img 
-              src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" 
+              src="/images/hero-bg.jpg" 
               alt="Abstract Concept" 
               className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-500 ease-out hover:scale-105"
               decoding="async"
