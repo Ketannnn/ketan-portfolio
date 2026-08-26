@@ -11,19 +11,19 @@ import { Button } from "../ui/Button";
 // The logo already serves as the home/back-to-top affordance.
 // Removing it declutters the pill and eliminates a redundant link.
 const NAV_LINKS = [
-  { label: "About",      href: "#about"      },
+  { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
-  { label: "Skills",     href: "#skills"     },
-  { label: "Projects",   href: "#projects"   },
-  { label: "Education",  href: "#education"  },
-  { label: "Contact",    href: "#contact"    },
+  { label: "Skills", href: "#skills" },
+  { label: "Projects", href: "#projects" },
+  { label: "Education", href: "#education" },
+  { label: "Contact", href: "#contact" },
 ] as const;
 
 const SECTION_IDS = NAV_LINKS.map((l) => l.href.replace("#", ""));
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled,   setScrolled]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   // Used to set `inert` on the mobile menu when closed, removing all its
   // children from the keyboard tab order without affecting CSS transitions.
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -107,7 +107,7 @@ export function Navbar() {
             {NAV_LINKS.map((link) => {
               const isActive = activeId === link.href.replace("#", "");
               return (
-                <motion.li 
+                <motion.li
                   key={link.href}
                   variants={{
                     hidden: { y: -8, opacity: 0 },
@@ -132,7 +132,7 @@ export function Navbar() {
                       />
                     )}
                     <span className="relative z-10">{link.label}</span>
-                    
+
                     {/* Hover underline */}
                     {!isActive && (
                       <motion.span
@@ -155,7 +155,7 @@ export function Navbar() {
             variant="ghost"
             size="sm"
             href={siteConfig.resumeUrl}
-            download
+            download="Ketan_Devraj_Resume.pdf"
             icon={<FileDown size={14} />}
             aria-label="Download resume PDF"
           >
@@ -211,7 +211,7 @@ export function Navbar() {
               variant="ghost"
               size="sm"
               href={siteConfig.resumeUrl}
-              download
+              download="Ketan_Devraj_Resume.pdf"
               icon={<FileDown size={14} />}
               className="w-full justify-center"
               aria-label="Download resume PDF"

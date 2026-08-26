@@ -12,7 +12,7 @@ const Hero3D = React.lazy(() => import("../ui/Hero3D"));
 function MagneticButton({ children, href, icon, variant, download, target, rel, ariaLabel }: any) {
   const { ref, x, y, textX, textY } = useMagnetic(0.3);
   const { setCursorState } = useCursor();
-  
+
   return (
     <motion.a
       ref={ref as React.RefObject<HTMLAnchorElement>}
@@ -24,11 +24,10 @@ function MagneticButton({ children, href, icon, variant, download, target, rel, 
       aria-label={ariaLabel}
       onMouseEnter={() => setCursorState("hover")}
       onMouseLeave={() => setCursorState("default")}
-      className={`relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition duration-200 ease-out ${
-        variant === 'primary' 
-          ? 'bg-white text-black hover:bg-zinc-200' 
+      className={`relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition duration-200 ease-out ${variant === 'primary'
+          ? 'bg-white text-black hover:bg-zinc-200'
           : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
-      }`}
+        }`}
     >
       <motion.span style={{ x: textX, y: textY }} className="flex items-center gap-2">
         {children}
@@ -42,9 +41,9 @@ function MagneticButton({ children, href, icon, variant, download, target, rel, 
 export function Hero() {
   const { mouseX, mouseY } = useMousePosition();
   const { lightX, lightY, isActive: lightActive } = useCursorLight(mouseX, mouseY);
-  
 
-  
+
+
   // Parallax layers
   const bgParallax = useParallax(mouseX, mouseY, 25);
   const h1Parallax = useParallax(mouseX, mouseY, 12);
@@ -68,7 +67,7 @@ export function Hero() {
         transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 pointer-events-none z-0"
       >
-        <div 
+        <div
           className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 w-[600px] sm:w-[800px] h-[350px] sm:h-[450px] bg-gradient-to-tr from-indigo-500/15 via-purple-500/10 to-transparent blur-3xl rounded-full pointer-events-none will-change-transform"
           style={{ transform: "translate(-50%, 0) translateZ(0)" }}
         />
@@ -102,7 +101,7 @@ export function Hero() {
 
       {/* Column 1 - Text */}
       <div className="flex flex-col items-start text-left z-10 pointer-events-auto w-full max-w-2xl mx-auto lg:mx-0 pt-20 lg:pt-0">
-        <motion.div 
+        <motion.div
           style={{ x: h1Parallax.x, y: h1Parallax.y }}
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -121,7 +120,7 @@ export function Hero() {
           </h1>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           style={{ x: subtitleParallax.x, y: subtitleParallax.y }}
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -132,7 +131,7 @@ export function Hero() {
             A Creative
           </p>
           <h2 className="text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] font-bold text-stone-400 tracking-[-0.04em] uppercase text-gradient">
-            DEVELOPER
+            SOFTWARE
             <br />
             <span className="text-white">ENGINEER</span>
           </h2>
@@ -156,43 +155,41 @@ export function Hero() {
 
       {/* Column 2 - Gradient Card and 3D Avatar */}
       <div className="relative h-full flex items-center justify-center z-10 w-full pb-20 lg:pb-0 overflow-hidden min-h-[400px] sm:min-h-[500px]">
-        
+
         <div className="absolute inset-0 z-10 overflow-hidden">
           <Suspense fallback={null}>
             <Hero3D />
           </Suspense>
         </div>
 
-        <div className="relative w-[300px] h-[400px] sm:w-[400px] sm:h-[500px] flex items-center justify-center group">
+        <motion.div
+          style={{
+            rotateX: bgParallax.y,
+            rotateY: bgParallax.x,
+          }}
+          className="relative w-[300px] h-[400px] sm:w-[400px] sm:h-[500px] flex items-center justify-center group"
+        >
           {/* Outer Glow */}
           <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full transition-transform duration-700 ease-out group-hover:scale-110" />
-          
-          {/* Floating Glass Shape (Static to avoid expensive blur recalculations) */}
-          <div 
+
+          {/* Floating Glass Shape — isolation:isolate forces Safari to composite backdrop-blur
+               independently from the animated parent, avoiding the cold-start GPU stall */}
+          <div
             className="absolute w-full h-full rounded-[2rem] border border-white/10 bg-[#090d17]/40 backdrop-blur-md overflow-hidden shadow-2xl flex items-center justify-center"
+            style={{ isolation: 'isolate', transform: 'translateZ(0)' }}
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(99,102,241,0.3),transparent_50%)]" />
-            
-            <motion.div
-              style={{ 
-                rotateX: bgParallax.y,
-                rotateY: bgParallax.x,
-                scale: 1.05
-              }}
-              className="absolute inset-0 w-full h-full flex items-center justify-center will-change-transform"
-            >
-              <img 
-                src="/images/hero-bg.jpg" 
-                alt="Abstract Concept" 
-                className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-500 ease-out group-hover:scale-105"
-                decoding="async"
-              />
-              <span className="relative z-10 text-[120px] sm:text-[180px] font-serif text-white/10 pointer-events-none select-none mix-blend-overlay">
-                {siteConfig.initials}
-              </span>
-            </motion.div>
+            <img
+              src="/images/hero-bg.jpg"
+              alt="Abstract Concept"
+              className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-500 ease-out hover:scale-105"
+              decoding="async"
+            />
+            <span className="relative z-10 text-[120px] sm:text-[180px] font-serif text-white/10 pointer-events-none select-none mix-blend-overlay">
+              {siteConfig.initials}
+            </span>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Scroll cue */}
@@ -207,7 +204,7 @@ export function Hero() {
           scroll
         </span>
         <div className="w-[1px] h-12 bg-white/10 relative overflow-hidden">
-          <motion.div 
+          <motion.div
             initial={{ y: "-100%" }}
             animate={{ y: "100%" }}
             transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
